@@ -16,22 +16,27 @@ vector<unsigned char> compressedData;
 unordered_map<char, byteToken> byteTokens;
 priority_queue<Node> huffman;
 vector<Node *> storedNodes;
+string filepath;
+string header;
 
 string readFile();
 void analyzeData();
 void huffmanTree();
 void extractCodes(Node n, string code);
 void compressFile();
-void outputCompressedFile(string filepath);
+void makeHeader();
+vector<unsigned char> codeStringToBytes(string code);
+//void outputCompressedFile(string filepath);
 
 int main()
 {
 	srand(time(NULL));
-	string filepath = readFile();
+	filepath = readFile();
 	analyzeData();
 	huffmanTree();
+	makeHeader();
 	compressFile();
-	outputCompressedFile(filepath);
+	//outputCompressedFile(filepath);
 
 	return 0;
 }
@@ -114,6 +119,18 @@ void extractCodes(Node n, string code)
 
 void compressFile()
 {
+	//
+	int slashIndex = filepath.find_last_of('/');
+	int dotIndex = filepath.find_last_of('.');
+	if (slashIndex = -1)
+		slashIndex = 0;
+	string filename = filepath.substr(slashIndex, dotIndex - slashIndex);
+	ofstream writer;
+	writer.open(filename + ".compressed");
+	//
+
+	writer << header;
+
 	int counter = 0;
 	unsigned char c = 0;
 	for (unsigned long i = 0; i < readData.size(); i++)
@@ -125,7 +142,7 @@ void compressFile()
 		{
 			char codeBit = code.at(codeIndex);
 			if(codeBit == '1')
-				c = c || (unsigned char)1;
+				c = c | (unsigned char)1;
 			c = c << 1;
 			codeIndex++;
 			counter++;
@@ -133,7 +150,8 @@ void compressFile()
 			if (counter == 8)
 			{
 				counter = 0;
-				compressedData.push_back(c);
+				//compressedData.push_back(c);
+				writer << c;
 				c = 0;
 			}
 			
@@ -145,10 +163,12 @@ void compressFile()
 		c = c << 1;
 		counter++;
 	}
-	compressedData.push_back(c);
+	writer << c;
+	writer.close();
+	//compressedData.push_back(c);
 }
 
-void outputCompressedFile(string filepath)
+/*void outputCompressedFile(string filepath)
 {
 	int slashIndex = filepath.find_last_of('/');
 	int dotIndex = filepath.find_last_of('.');
@@ -162,5 +182,59 @@ void outputCompressedFile(string filepath)
 		writer << compressedData[i];
 	}
 	writer.close();
+}*/
+
+void makeHeader()
+{
+	header = "";
+	unordered_map<char, byteToken>::iterator it = byteTokens.begin();
+	char nTokens = byteTokens.size();
+	header += nTokens;
+	for (it; it != byteTokens.end(); it++)
+	{
+		unsigned char byteToken, codeLength;
+		byteToken = it->first;
+		vector<unsigned char> code = codeStringToBytes(it->second.getCode());
+		codeLength = (unsigned char)it->second.getCode().size();
+		header += byteToken;
+		header += codeLength;
+		for (int j = 0; j < code.size(); j++)
+		{
+			header += code[j];
+		}
+	}
 }
 
+vector<unsigned char> codeStringToBytes(string code)
+{
+	vector<unsigned char> ret;
+	unsigned char c = 0;
+	int counter = 0;
+	int codeSize = code.size();
+	int codeIndex = 0;
+	while (codeIndex < codeSize)
+	{
+		char codeBit = code.at(codeIndex);
+		if (codeBit == '1')
+			c = c | (unsigned char)1;
+		c = c << 1;
+		codeIndex++;
+		counter++;
+
+		if (counter == 8)
+		{
+			counter = 0;
+			ret.push_back(c);
+			c = 0;
+		}
+	}
+
+	while (counter < 8)
+	{
+		c = c << 1;
+		counter++;
+	}
+
+	ret.push_back(c);
+	return ret;
+}
