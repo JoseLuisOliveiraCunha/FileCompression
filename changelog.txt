@@ -3,7 +3,6 @@ v0.3
 
 v0.2
 + Works with any file in any directory
-
 + Outputs the compressed data to a file in the original directory with the same name as the original file but with a .compressed extension
 
 v0.1
