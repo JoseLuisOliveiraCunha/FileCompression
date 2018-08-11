@@ -1,0 +1,12 @@
+v0.3
++ Creates a header with all information needed for decompression and adds it at the start of the output compressed file
+
+v0.2
++ Works with any file in any directory
+
++ Outputs the compressed data to a file in the original directory with the same name as the original file but with a .compressed extension
+
+v0.1
++ Works in any file inside the program directory
++ Successfully calculates the Huffman tree and Huffman codes for each different token present in the file (byte)
++ Outputs the compressed data to a file in the program directory with the same name as the original but with a .compressed extension
