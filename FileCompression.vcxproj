@@ -139,13 +139,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="byteToken.cpp" />
+    <ClCompile Include="ByteToken.cpp" />
+    <ClCompile Include="Huffman.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Node.cpp" />
-    <ClCompile Include="Origem.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="byteToken.h" />
+    <ClInclude Include="ByteToken.h" />
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="Huffman.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,6 @@
 #include "Node.h"
 
 
-
 Node::Node(char key, long count, Node* n1, Node* n2)
 {
 	this->key = key;
@@ -9,7 +8,6 @@ Node::Node(char key, long count, Node* n1, Node* n2)
 	this->n1 = n1;
 	this->n2 = n2;
 }
-
 
 Node::~Node()
 {

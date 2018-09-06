@@ -1,53 +1,28 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <time.h>
-#include <queue>
-#include <unordered_map>
+#include "Huffman.h"
 
-#include "byteToken.h"
-#include "Node.h"
 
-using namespace std;
-
-vector<char> readData;
-vector<unsigned char> compressedData;
-unordered_map<char, byteToken> byteTokens;
-priority_queue<Node> huffman;
-vector<Node *> storedNodes;
-string filepath;
-string header;
-
-string readFile();
-void analyzeData();
-void huffmanTree();
-void extractCodes(Node n, string code);
-void compressFile();
-void makeHeader();
-vector<unsigned char> codeStringToBytes(string code);
-//void outputCompressedFile(string filepath);
-
-int main()
+Huffman::Huffman()
 {
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	filepath = readFile();
 	analyzeData();
 	huffmanTree();
 	makeHeader();
 	compressFile();
-	//outputCompressedFile(filepath);
-
-	return 0;
+	outputCompressedFile();
 }
 
-string readFile() 
+Huffman::~Huffman()
 {
-	string filepath;
-	cout << "Input path to file to be compressed:\n";
-	cin >> filepath;
-	ifstream reader;
-	reader.open(filepath, ios_base::binary);
+}
+
+std::string Huffman::readFile()
+{
+	std::string filepath;
+	std::cout << "Input path to file to be compressed:\n";
+	std::cin >> filepath;
+	std::ifstream reader;
+	reader.open(filepath, std::ios_base::binary);
 	char readChar;
 	while (reader.get(readChar))
 	{
@@ -57,26 +32,26 @@ string readFile()
 	return filepath;
 }
 
-void analyzeData() 
+void Huffman::analyzeData()
 {
 	for (unsigned long i = 0; i < readData.size(); i++)
 	{
 		char c = readData[i];
-		unordered_map<char, byteToken>::iterator it = byteTokens.find(c);
+		std::unordered_map<char, ByteToken>::iterator it = byteTokens.find(c);
 		if (it != byteTokens.end())
 		{
 			it->second.increaseCount();
 			continue;
 		}
-		byteToken bt(c);
-		pair<char, byteToken> p(c, bt);
+		ByteToken bt(c);
+		std::pair<char, ByteToken> p(c, bt);
 		byteTokens.insert(p);
 	}
 }
 
-void huffmanTree() 
+void Huffman::huffmanTree()
 {
-	for (unordered_map<char, byteToken>::iterator it = byteTokens.begin(); it != byteTokens.end(); it++)
+	for (std::unordered_map<char, ByteToken>::iterator it = byteTokens.begin(); it != byteTokens.end(); it++)
 	{
 		huffman.push(Node(it->second.getKey(), it->second.getCount(), NULL, NULL));
 	}
@@ -85,10 +60,10 @@ void huffmanTree()
 	{
 		Node n1 = huffman.top();
 		huffman.pop();
-		
+
 		Node n2 = huffman.top();
 		huffman.pop();
-		
+
 		Node* n1Pointer = new Node(n1.getKey(), n1.getCount(), n1.getN1(), n1.getN2());
 		Node* n2Pointer = new Node(n2.getKey(), n2.getCount(), n2.getN1(), n2.getN2());
 		storedNodes.push_back(n1Pointer);
@@ -100,7 +75,7 @@ void huffmanTree()
 	extractCodes(huffman.top(), "");
 }
 
-void extractCodes(Node n, string code)
+void Huffman::extractCodes(Node n, std::string code)
 {
 	if (n.getN1() != NULL)
 	{
@@ -117,44 +92,46 @@ void extractCodes(Node n, string code)
 	byteTokens[c].setCode(code);
 }
 
-void compressFile()
+void Huffman::compressFile()
 {
-	//
+	/*
 	int slashIndex = filepath.find_last_of('/');
 	int dotIndex = filepath.find_last_of('.');
 	if (slashIndex = -1)
-		slashIndex = 0;
+	slashIndex = 0;
 	string filename = filepath.substr(slashIndex, dotIndex - slashIndex);
 	ofstream writer;
 	writer.open(filename + ".compressed");
-	//
+
 
 	writer << header;
-
+	*/
+	compressedData.push_back("");
 	int counter = 0;
 	unsigned char c = 0;
 	for (unsigned long i = 0; i < readData.size(); i++)
 	{
-		string code = byteTokens[readData[i]].getCode();
+		std::string code = byteTokens[readData[i]].getCode();
 		int codeSize = code.size();
 		int codeIndex = 0;
 		while (codeIndex < codeSize)
 		{
 			char codeBit = code.at(codeIndex);
-			if(codeBit == '1')
+			if (codeBit == '1')
 				c = c | (unsigned char)1;
 			c = c << 1;
 			codeIndex++;
 			counter++;
-			
+
 			if (counter == 8)
 			{
 				counter = 0;
 				//compressedData.push_back(c);
-				writer << c;
+				//writer << c;
+				compressedData[0] += c;
 				c = 0;
 			}
-			
+
 		}
 	}
 
@@ -163,51 +140,55 @@ void compressFile()
 		c = c << 1;
 		counter++;
 	}
-	writer << c;
-	writer.close();
+	compressedData[0] += c;
+	//writer << c;
+	//writer.close();
 	//compressedData.push_back(c);
 }
 
-/*void outputCompressedFile(string filepath)
+void Huffman::outputCompressedFile()
 {
+	std::cout << "Outputting file\n";
 	int slashIndex = filepath.find_last_of('/');
 	int dotIndex = filepath.find_last_of('.');
 	if (slashIndex = -1)
 		slashIndex = 0;
-	string filename = filepath.substr(slashIndex, dotIndex - slashIndex);
-	
-	ofstream writer;
+	std::string filename = filepath.substr(slashIndex, dotIndex - slashIndex);
+	std::ofstream writer;
 	writer.open(filename + ".compressed");
+
+	writer << header;
+
 	for (unsigned long i = 0; i < compressedData.size(); i++) {
 		writer << compressedData[i];
 	}
 	writer.close();
-}*/
+}
 
-void makeHeader()
+void Huffman::makeHeader()
 {
 	header = "";
-	unordered_map<char, byteToken>::iterator it = byteTokens.begin();
-	char nTokens = byteTokens.size();
+	std::unordered_map<char, ByteToken>::iterator it = byteTokens.begin();
+	char nTokens = (char)byteTokens.size();
 	header += nTokens;
 	for (it; it != byteTokens.end(); it++)
 	{
 		unsigned char byteToken, codeLength;
 		byteToken = it->first;
-		vector<unsigned char> code = codeStringToBytes(it->second.getCode());
+		std::vector<unsigned char> code = codeStringToBytes(it->second.getCode());
 		codeLength = (unsigned char)it->second.getCode().size();
 		header += byteToken;
 		header += codeLength;
-		for (int j = 0; j < code.size(); j++)
+		for (unsigned int j = 0; j < code.size(); j++)
 		{
 			header += code[j];
 		}
 	}
 }
 
-vector<unsigned char> codeStringToBytes(string code)
+std::vector<unsigned char> Huffman::codeStringToBytes(std::string code)
 {
-	vector<unsigned char> ret;
+	std::vector<unsigned char> ret;
 	unsigned char c = 0;
 	int counter = 0;
 	int codeSize = code.size();

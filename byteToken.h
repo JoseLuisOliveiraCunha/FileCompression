@@ -2,23 +2,21 @@
 
 #include <string>
 
-using namespace std;
-
-class byteToken
+class ByteToken
 {
 private:
 	char key = 'a';
 	long count = 1;
-	string code = "";
+	std::string code = "";
 
 public:
-	byteToken() {};
-	byteToken(char key);
-	~byteToken();
+	ByteToken() {};
+	ByteToken(char key);
+	~ByteToken();
 	void increaseCount();
-	void setCode(string code);
+	void setCode(std::string code);
 	char getKey();
 	long getCount();
-	string getCode();
+	std::string getCode();
 };
 

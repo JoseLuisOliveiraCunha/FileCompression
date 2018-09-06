@@ -1,37 +1,37 @@
-#include "byteToken.h"
+#include "ByteToken.h"
 
-byteToken::byteToken(char key)
+
+ByteToken::ByteToken(char key)
 {
 	this->key = key;
 }
 
-
-byteToken::~byteToken()
+ByteToken::~ByteToken()
 {
 
 }
 
-void byteToken::increaseCount()
+void ByteToken::increaseCount()
 {
 	this->count++;
 }
 
-void byteToken::setCode(string code)
+void ByteToken::setCode(std::string code)
 {
 	this->code = code;
 }
 
-char byteToken::getKey()
+char ByteToken::getKey()
 {
 	return this->key;
 }
 
-long byteToken::getCount()
+long ByteToken::getCount()
 {
 	return this->count;
 }
 
-string byteToken::getCode()
+std::string ByteToken::getCode()
 {
 	return this->code;
 }
