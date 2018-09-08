@@ -1,22 +1,21 @@
 #include "ByteToken.h"
 
 
+ByteToken::ByteToken() = default;
+
 ByteToken::ByteToken(char key)
 {
 	this->key = key;
 }
 
-ByteToken::~ByteToken()
-{
-
-}
+ByteToken::~ByteToken() = default;
 
 void ByteToken::increaseCount()
 {
 	this->count++;
 }
 
-void ByteToken::setCode(std::string code)
+void ByteToken::setCode(const std::string &code)
 {
 	this->code = code;
 }
