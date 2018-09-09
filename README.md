@@ -1,6 +1,6 @@
 # FileCompression v0.3
 
-##### A project developed to implement Huffman coding and test it as a standalone file compression method as well.
+##### A project developed to implement Huffman coding and test it as a standalone lossless file compression method as well.
 
 ## Current version features:
 + Works with any file in any directory
