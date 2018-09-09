@@ -9,28 +9,26 @@ Node::Node(char key, long count, Node* n1, Node* n2)
 	this->n2 = n2;
 }
 
-Node::~Node()
-{
-}
+Node::~Node() = default;
 
 char Node::getKey()
 {
-	return this->key;
+	return key;
 }
 
 long Node::getCount()
 {
-	return this->count;
+	return count;
 }
 
 Node* Node::getN1()
 {
-	return this->n1;
+	return n1;
 }
 
 Node* Node::getN2()
 {
-	return this->n2;
+	return n2;
 }
 
 bool operator <(const Node& lhs, const Node& rhs)
