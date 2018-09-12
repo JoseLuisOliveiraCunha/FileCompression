@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <time.h>
+#include <ctime>
 #include <queue>
 #include <unordered_map>
 
